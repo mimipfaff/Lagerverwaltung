@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "lagerverwaltung",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "3456", "--directory", "C:\\Users\\mimip\\lagerverwaltung"],
+      "port": 3456
+    }
+  ]
+}

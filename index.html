@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lagerverwaltungssystem</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+  <div class="header-brand">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+      <line x1="12" y1="12" x2="12" y2="17"/><line x1="9.5" y1="14.5" x2="14.5" y2="14.5"/>
+    </svg>
+    <div class="brand-text">
+      <span class="brand-line1">Lager-</span>
+      <span class="brand-line2">Bestandsverwaltung</span>
+    </div>
+  </div>
+
+  <div class="header-search">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input type="text" id="globalSearch" placeholder="Suche nach Artikel, ID, Kategorie…" oninput="onGlobalSearch(this.value)">
+  </div>
+
+  <div class="header-actions">
+    <button class="hdr-btn" onclick="onNotifClick()" title="Benachrichtigungen">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+      <span class="notif-badge" id="notifBadge" style="display:none">0</span>
+    </button>
+    <button class="hdr-btn" title="Einstellungen">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+    </button>
+    <div class="hdr-user">
+      <span>Admin</span>
+      <div class="hdr-avatar">A</div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== BODY ===== -->
+<div class="app-body">
+
+  <!-- Left Sidebar -->
+  <aside class="sidebar">
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-link" data-view="alle" onclick="setView('alle',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        Dashboard
+      </a>
+
+      <div class="nav-section">
+        <span class="nav-section-label">Artikel</span>
+        <a href="#" class="nav-link nav-sub active" data-view="alle" onclick="setView('alle',this)">• Alle</a>
+        <div class="nav-sub-group">
+          <span class="nav-sub-label">Einzelnt:</span>
+          <div id="articleNavLinks"></div>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <span class="nav-section-label">Kategorie</span>
+        <a href="#" class="nav-link nav-sub" data-view="sensoren" onclick="setView('sensoren',this)">• Sensoren</a>
+      </div>
+
+      <a href="#" class="nav-link" data-view="mindestbestand" onclick="setView('mindestbestand',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        Mindestbestand
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <button class="btn btn-primary" onclick="openAddModal()">
+        <span>+</span> Neuer Artikel
+      </button>
+      <div class="toolbar-filters">
+        <select id="filterKat" onchange="renderTable()">
+          <option value="">Kategorie: Alle</option>
+          <option value="Sensor">Kategorie: Sensoren</option>
+        </select>
+        <select id="filterBestand" onchange="renderTable()">
+          <option value="">Bestand: Alle</option>
+          <option value="low">Bestand: Gering</option>
+          <option value="ok">Bestand: OK</option>
+        </select>
+        <div class="toolbar-search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" id="tableSearch" placeholder="Suche…" oninput="renderTable()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Article Table -->
+    <div class="table-card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Artikel</th>
+            <th>Kathegorie</th>
+            <th>Bestand</th>
+            <th>Mindestbestand</th>
+            <th>ID</th>
+            <th>Preis</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Bottom Row -->
+    <div class="bottom-grid">
+      <!-- Logbuch -->
+      <div class="card logbuch-card">
+        <h3 class="card-title">Logbuch der letzten Aktionen</h3>
+        <table class="log-table">
+          <thead>
+            <tr>
+              <th style="width:110px"></th>
+              <th></th>
+              <th style="width:160px">Datum/Uhrzeit</th>
+            </tr>
+          </thead>
+          <tbody id="logBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Warnings -->
+      <div class="card warning-card">
+        <div class="warning-header">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#D97706" stroke="#D97706" stroke-width="1">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13" stroke="white" stroke-width="2"/>
+            <line x1="12" y1="17" x2="12.01" y2="17" stroke="white" stroke-width="2"/>
+          </svg>
+          <span class="warning-title"><a href="#" onclick="setView('mindestbestand', null); return false;">Achtung geringer Bestand</a></span>
+          <span class="warning-col-label">Mindestbestand</span>
+        </div>
+        <div id="warningItems"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Right Panel -->
+  <aside class="right-panel">
+    <div class="card contact-card">
+      <h4 class="contact-title">MMM Lager-Bestandsverwaltung GmbH</h4>
+      <p class="contact-row"><strong>Kontakt:</strong>&nbsp; Melina Baumann<br>
+        <span class="contact-indent">Mia Lehmann</span><br>
+        <span class="contact-indent">Miriam</span>
+      </p>
+      <p class="contact-row"><strong>E-Mail:</strong>&nbsp; MMM.lager-Bestandsverwaltung@web.de</p>
+      <p class="contact-row"><strong>Telefon:</strong>&nbsp; 07845 78809</p>
+    </div>
+
+    <div class="card stats-card">
+      <div class="stats-header">
+        <h4>Gesamtwert</h4>
+        <button class="edit-stat-btn" onclick="openEditStatsModal('wert')" title="Bearbeiten">✎</button>
+      </div>
+      <div class="stat-row"><span>aktuell:</span><strong id="statWertAktuell">—</strong></div>
+      <div class="stat-row stat-muted"><span>Letzter Monat:</span><span id="statWertMonat">19.500,00 €</span></div>
+      <div class="stat-row stat-muted"><span>Letztes Jahr:</span><span id="statWertJahr">90.750,00 €</span></div>
+    </div>
+
+    <div class="card stats-card">
+      <div class="stats-header">
+        <h4>Gesamtbestand</h4>
+        <button class="edit-stat-btn" onclick="openEditStatsModal('bestand')" title="Bearbeiten">✎</button>
+      </div>
+      <div class="stat-row"><span>aktuell:</span><strong id="statBestandAktuell">—</strong></div>
+      <div class="stat-row stat-muted"><span>Letzter Monat:</span><span id="statBestandMonat">900 Stück</span></div>
+      <div class="stat-row stat-muted"><span>Letztes Jahr:</span><span id="statBestandJahr">10.000 Stück</span></div>
+    </div>
+  </aside>
+</div>
+
+<!-- ===== MODAL: Artikel anlegen / bearbeiten ===== -->
+<div class="modal-backdrop" id="articleBackdrop" onclick="closeArticleModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 id="modalHeading">Neuer Artikel</h3>
+      <button class="modal-close" onclick="closeArticleModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editId">
+      <div class="form-row">
+        <label for="fId">Artikelnummer</label>
+        <input type="text" id="fId" placeholder="0121-00000011">
+      </div>
+      <div class="form-row">
+        <label for="fName">Bezeichnung</label>
+        <input type="text" id="fName" placeholder="Artikelname">
+      </div>
+      <div class="form-row">
+        <label for="fKat">Kategorie</label>
+        <input type="text" id="fKat" placeholder="Sensor">
+      </div>
+      <div class="form-2col">
+        <div class="form-row">
+          <label for="fBestand">Bestand</label>
+          <input type="number" id="fBestand" min="0" placeholder="0">
+        </div>
+        <div class="form-row">
+          <label for="fMind">Mindestbestand</label>
+          <input type="number" id="fMind" min="0" placeholder="0">
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="fPreis">Preis (€)</label>
+        <input type="number" id="fPreis" min="0" step="0.01" placeholder="0,00">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeArticleModal()">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveArticle()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: Wareneingang / Warenausgang ===== -->
+<div class="modal-backdrop" id="buchungBackdrop" onclick="closeBuchungModal()">
+  <div class="modal modal-sm" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 id="buchungHeading">Wareneingang</h3>
+      <button class="modal-close" onclick="closeBuchungModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="bId">
+      <input type="hidden" id="bType">
+      <p class="buchung-article" id="bName"></p>
+      <div class="form-row">
+        <label for="bMenge">Menge</label>
+        <input type="number" id="bMenge" min="1" placeholder="Anzahl eingeben">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeBuchungModal()">Abbrechen</button>
+      <button class="btn btn-primary" onclick="doBuchung()">Buchen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: Löschen bestätigen ===== -->
+<div class="modal-backdrop" id="deleteBackdrop" onclick="closeDeleteModal()">
+  <div class="modal modal-sm" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Artikel löschen</h3>
+      <button class="modal-close" onclick="closeDeleteModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Möchten Sie den Artikel <strong id="deleteNameDisplay"></strong> wirklich löschen?</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeDeleteModal()">Abbrechen</button>
+      <button class="btn btn-danger" onclick="doDelete()">Löschen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: Statistik bearbeiten ===== -->
+<div class="modal-backdrop" id="statsBackdrop" onclick="closeStatsModal()">
+  <div class="modal modal-sm" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 id="statsModalHeading">Statistik bearbeiten</h3>
+      <button class="modal-close" onclick="closeStatsModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="statsType">
+      <div class="form-row">
+        <label id="statsLabel1">Letzter Monat</label>
+        <input type="text" id="statsVal1">
+      </div>
+      <div class="form-row">
+        <label id="statsLabel2">Letztes Jahr</label>
+        <input type="text" id="statsVal2">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeStatsModal()">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveStats()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<div id="toastContainer" class="toast-container"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

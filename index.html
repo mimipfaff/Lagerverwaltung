@@ -10,6 +10,10 @@
 
 <!-- ===== HEADER ===== -->
 <header class="header">
+  <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleSidebar()" title="Menü">
+    <span></span><span></span><span></span>
+  </button>
+
   <div class="header-brand">
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
@@ -51,6 +55,8 @@
 
 <!-- ===== BODY ===== -->
 <div class="app-body">
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
   <!-- Left Sidebar -->
   <aside class="sidebar">

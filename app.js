@@ -251,6 +251,7 @@ function setView(view, el) {
   currentView = view;
   document.querySelectorAll('.nav-link, .nav-sub').forEach(n => n.classList.remove('active'));
   if (el) el.classList.add('active');
+  closeSidebar();
 
   // Sync filter dropdowns for specific views
   const bestF = document.getElementById('filterBestand');
@@ -480,10 +481,28 @@ function showToast(msg, type = '') {
   setTimeout(() => t.remove(), 3000);
 }
 
+// ===== SIDEBAR TOGGLE (mobile) =====
+function toggleSidebar() {
+  const sidebar  = document.querySelector('.sidebar');
+  const overlay  = document.getElementById('sidebarOverlay');
+  const btn      = document.getElementById('hamburgerBtn');
+  const isOpen   = sidebar.classList.contains('open');
+  sidebar.classList.toggle('open', !isOpen);
+  overlay.classList.toggle('active', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+}
+
+function closeSidebar() {
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('active');
+  document.getElementById('hamburgerBtn').classList.remove('open');
+}
+
 // ===== KEYBOARD =====
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     document.querySelectorAll('.modal-backdrop.open').forEach(m => m.classList.remove('open'));
+    closeSidebar();
     deleteTarget = null;
   }
 });
